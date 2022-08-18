@@ -38,7 +38,7 @@ type Games struct {
 	Completionist string `json:"completionist"`
 }
 
-func ParseHTML(game string) []Games {
+func Search(game string) []Games {
 	gamesFound := HowLongToBeat(game)
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(gamesFound)))
@@ -73,21 +73,21 @@ func ParseHTML(game string) []Games {
 		if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
 
 		} else {
-			gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours", "h")})
+			gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours ", "")})
 		}
 
 		if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
 
 		} else {
 			fmt.Println()
-			gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours", "h")})
+			gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours ", "")})
 		}
 
 		if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
 
 		} else {
 			fmt.Println()
-			gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours", "h")})
+			gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours ", "")})
 		}
 
 	})
