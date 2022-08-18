@@ -61,7 +61,7 @@ func ParseHTML(game string) []Games {
 	doc.Find(".search_list_details_block .search_list_tidbit").Each(func(_ int, tag *goquery.Selection) {
 
 		time := tag.Text()
-		fmt.Println(time)
+		// fmt.Println(time)
 		gamesTime = append(gamesTime, GamesTime{time})
 	})
 
