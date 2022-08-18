@@ -20,13 +20,22 @@ type Gamesimages struct {
 }
 
 type GamesTime struct {
-	Time string `json:"time"`
+	Main string `json:"main"`
 }
 
+type GamesExtra struct {
+	Extra string `json:"extra"`
+}
+
+type GamesCompletionist struct {
+	Completionist string `json:"completionist"`
+}
 type Games struct {
-	Image string `json:"image"`
-	Title string `json:"title"`
-	Time  string `json:"time"`
+	Image         string `json:"image"`
+	Title         string `json:"title"`
+	Main          string `json:"main"`
+	Extra         string `json:"extra"`
+	Completionist string `json:"completionist"`
 }
 
 func ParseHTML(game string) []Games {
@@ -38,10 +47,11 @@ func ParseHTML(game string) []Games {
 		log.Fatal(err)
 	}
 
-	// text := doc.Find(".text_green a, title").Text()
 	var gamesTitles []GamesTitles
 	var gamesimages []Gamesimages
 	var gamesTime []GamesTime
+	var gamesExtra []GamesExtra
+	var gamesCompletionist []GamesCompletionist
 
 	var games []Games
 
@@ -58,42 +68,35 @@ func ParseHTML(game string) []Games {
 		gamesTitles = append(gamesTitles, GamesTitles{title})
 	})
 
-	doc.Find(".search_list_details_block .search_list_tidbit").Each(func(_ int, tag *goquery.Selection) {
+	doc.Find(".search_list_details_block div").Each(func(i int, tag *goquery.Selection) {
 
-		time := tag.Text()
-		// fmt.Println(time)
-		gamesTime = append(gamesTime, GamesTime{time})
+		if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
+
+		} else {
+			gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours", "h")})
+		}
+
+		if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
+
+		} else {
+			fmt.Println()
+			gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours", "h")})
+		}
+
+		if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
+
+		} else {
+			fmt.Println()
+			gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours", "h")})
+		}
+
 	})
 
-	for i := 0; i < len(gamesTitles); i++ {
-		games = append(games, Games{gamesimages[i].Image, gamesTitles[i].Title, gamesTime[i].Time})
+	for i := range gamesTime {
+		games = append(games, Games{gamesimages[i].Image, gamesTitles[i].Title, gamesTime[i].Main, gamesExtra[i].Extra, gamesCompletionist[i].Completionist})
 	}
 
-	// json, _ := json.MarshalIndent(games, "", " ")
-	// fmt.Println(string(json))
 	return games
-	// doc.Find(".search_list_details").Each(func(i int, s *goquery.Selection) {
-	// 	// For each item found, get the title
-	// 	title := s.Find("a").Text()
-	// 	fmt.Printf("game %d: %s\n", i, title)
-
-	// 	image := s.Find(".search_list_image").Text()
-	// 	fmt.Printf("image %d: %s\n", i, image)
-
-	// 	main := s.Find(".search_list_details_block div .search_list_tidbit").Text()
-	// 	fmt.Println(main)
-	// })
-
-	// re := regexp.MustCompile("\\s{2,}")
-	// fmt.Println(re.ReplaceAllString(text, "\n"))
-
-	// c.OnHTML(".search_list_details", func(e *colly.HTMLElement) {
-	// 	title := e.ChildAttr(".shadow_text a", "title")
-	// 	fmt.Println(title)
-
-	// 	dat := e.ChildText(".search_list_details_block(1)")
-	// 	fmt.Println(dat)
-	// })
 }
 
 func HowLongToBeat(game string) string {
