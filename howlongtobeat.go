@@ -39,7 +39,7 @@ type Games struct {
 }
 
 func Search(game string) []Games {
-	gamesFound := HowLongToBeat(game)
+	gamesFound := howLongToBeat(game)
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(gamesFound)))
 
@@ -99,7 +99,7 @@ func Search(game string) []Games {
 	return games
 }
 
-func HowLongToBeat(game string) string {
+func howLongToBeat(game string) string {
 	form := url.Values{}
 	form.Add("queryString", game)
 	form.Add("t", "games")
