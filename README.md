@@ -32,7 +32,7 @@ import "github.com/saturnavt/howlongtobeat"
 #### Searching for a game
 
 ```go
-result := howlongtobeat.Search("doom")
+result := howlongtobeat.Search("Elden Ring")
 fmt.Println(result)
 ```
 
@@ -41,17 +41,17 @@ fmt.Println(result)
 ```go
 [
    {
-      "image":"https://howlongtobeat.com/games/79790_Stray_(2021).jpg",
-      "title":"Stray",
-      "main":"5",
-      "extra":"6",
-      "completionist":"9"
+      "image":"https://howlongtobeat.com/games/68151_Elden_Ring.jpg",
+      "title":"Elden Ring",
+      "main":"52",
+      "extra":"98",
+      "completionist":"131"
    }{
-      "image":"https://howlongtobeat.com/games/103825_Xenoblade_Chronicles_3.jpg",
-      "title":"Xenoblade Chronicles 3",
-      "main":"56½",
-      "extra":"82",
-      "completionist":"161"
+      "image":"https://howlongtobeat.com/games/108888_Elden_Ring_GB.jpg",
+      "title":"Elden Ring GB",
+      "main":"21",
+      "extra":"29",
+      "completionist":"--"
    }
 ]
 ```
@@ -62,6 +62,8 @@ fmt.Println(result)
     Co-Op
     Vs.
 
+### Why missing features
+    To get the hours to complete a online game is really hard becouse it depends on how long you will play it or how many updates will the game have in the future. Not even in howlongtobeat page is accurated for example take a look at (Valorant) it says 23½ Hours ive play it and it take way more than that, there are many online games that shows the wrong time.
 
 ## License
 
