@@ -26,16 +26,16 @@ func TestSearch(t *testing.T) {
 		{
 			Image:         "https://howlongtobeat.com/games/68151_Elden_Ring.jpg",
 			Title:         "Elden Ring",
-			Main:          "52 Hours ",
-			Extra:         "98 Hours ",
-			Completionist: "131 Hours ",
+			Main:          "Main Story 52 Hours ",
+			Extra:         "Main + Extra 98 Hours ",
+			Completionist: "Completionist 131 Hours ",
 		},
 		{
 			Image:         "https://howlongtobeat.com/games/108888_Elden_Ring_GB.jpg",
 			Title:         "Elden Ring GB",
-			Main:          "21 Mins ",
-			Extra:         "29 Mins ",
-			Completionist: "--",
+			Main:          "Main Story 21 Mins ",
+			Extra:         "Main + Extra 29 Mins ",
+			Completionist: "Completionist --",
 		},
 	}
 
