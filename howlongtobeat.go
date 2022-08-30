@@ -38,8 +38,9 @@ type Games struct {
 	Completionist string `json:"completionist"`
 }
 
+//Filters hmtl to find games
 func Search(game string) []Games {
-	gamesFound := howLongToBeat(game)
+	gamesFound := howLongToBeat(game) // gets html
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(gamesFound)))
 
@@ -55,6 +56,7 @@ func Search(game string) []Games {
 
 	var games []Games
 
+	// Finds game image
 	doc.Find(".back_darkish .search_list_image img").Each(func(_ int, tag *goquery.Selection) {
 
 		link, _ := tag.Attr("src")
@@ -62,37 +64,64 @@ func Search(game string) []Games {
 		gamesimages = append(gamesimages, Gamesimages{"https://howlongtobeat.com" + link})
 	})
 
+	// Finds game name
 	doc.Find(".search_list_details .shadow_text a").Each(func(_ int, tag *goquery.Selection) {
 
 		title, _ := tag.Attr("title")
 		gamesTitles = append(gamesTitles, GamesTitles{title})
 	})
 
-	doc.Find(".search_list_details_block div").Each(func(i int, tag *goquery.Selection) {
+	// Finds class .search_list_details_block and loops divs
+	doc.Find(".search_list_details_block").Each(func(i int, tag *goquery.Selection) {
 
-		if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
+		// if finds .search_list_tidbit class it finds non online games else are online
+		if len(tag.Find(".search_list_tidbit").Text()) > 0 {
+			// If class .search_list_tidbit position is = to 1 and is not empty it finds Main
+			if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
+				gamesTime = append(gamesTime, GamesTime{"--"})
 
+			} else {
+				gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours ", "")})
+			}
+
+			if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
+				gamesExtra = append(gamesExtra, GamesExtra{"--"})
+
+			} else {
+				gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours ", "")})
+			}
+
+			if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
+			} else {
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours ", "")})
+			}
 		} else {
-			gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours ", "")})
-		}
+			if tag.Find("div").Eq(1).Text() == "" {
+				gamesTime = append(gamesTime, GamesTime{"--"})
 
-		if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
+			} else {
+				gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find("div").Eq(1).Text(), " Solo ", "")})
+			}
 
-		} else {
-			fmt.Println()
-			gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours ", "")})
-		}
+			if tag.Find("div").Eq(3).Text() == "" {
+				gamesExtra = append(gamesExtra, GamesExtra{"--"})
 
-		if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
+			} else {
+				gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find("div").Eq(3).Text(), " Co-Op ", "")})
+			}
 
-		} else {
-			fmt.Println()
-			gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours ", "")})
+			if tag.Find("div").Eq(5).Text() == "" {
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
+
+			} else {
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find("div").Eq(5).Text(), " Vs. ", "")})
+			}
 		}
 
 	})
 
-	for i := range gamesTime {
+	for i := range gamesTitles {
 		games = append(games, Games{gamesimages[i].Image, gamesTitles[i].Title, gamesTime[i].Main, gamesExtra[i].Extra, gamesCompletionist[i].Completionist})
 	}
 

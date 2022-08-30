@@ -56,15 +56,6 @@ fmt.Println(result)
 ]
 ```
 
-### Missing features
-    Single-Player
-    Solo
-    Co-Op
-    Vs.
-
-### Why missing features
-    To get the hours to complete a online game is really hard becouse it depends on how long you will play it or how many updates will the game have in the future. Not even in howlongtobeat page is accurated for example take a look at (Valorant) it says 23½ Hours ive play it and it take way more than that, there are many online games that shows the wrong time.
-
 ## License
 
 DO WHAT THE FUCK YOU WANT
