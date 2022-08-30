@@ -81,41 +81,41 @@ func Search(game string) []Games {
 				gamesTime = append(gamesTime, GamesTime{"--"})
 
 			} else {
-				gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(1).Text(), " Hours ", "")})
+				gamesTime = append(gamesTime, GamesTime{tag.Find(".search_list_tidbit").Eq(1).Text()})
 			}
 
 			if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
 				gamesExtra = append(gamesExtra, GamesExtra{"--"})
 
 			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(3).Text(), " Hours ", "")})
+				gamesExtra = append(gamesExtra, GamesExtra{tag.Find(".search_list_tidbit").Eq(3).Text()})
 			}
 
 			if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
 				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
 			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find(".search_list_tidbit").Eq(5).Text(), " Hours ", "")})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{tag.Find(".search_list_tidbit").Eq(5).Text()})
 			}
 		} else {
 			if tag.Find("div").Eq(1).Text() == "" {
 				gamesTime = append(gamesTime, GamesTime{"--"})
 
 			} else {
-				gamesTime = append(gamesTime, GamesTime{strings.ReplaceAll(tag.Find("div").Eq(1).Text(), " Solo ", "")})
+				gamesTime = append(gamesTime, GamesTime{tag.Find("div").Eq(1).Text()})
 			}
 
 			if tag.Find("div").Eq(3).Text() == "" {
 				gamesExtra = append(gamesExtra, GamesExtra{"--"})
 
 			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{strings.ReplaceAll(tag.Find("div").Eq(3).Text(), " Co-Op ", "")})
+				gamesExtra = append(gamesExtra, GamesExtra{tag.Find("div").Eq(3).Text()})
 			}
 
 			if tag.Find("div").Eq(5).Text() == "" {
 				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
 
 			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{strings.ReplaceAll(tag.Find("div").Eq(5).Text(), " Vs. ", "")})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{tag.Find("div").Eq(5).Text()})
 			}
 		}
 
