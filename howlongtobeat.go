@@ -78,44 +78,44 @@ func Search(game string) []Games {
 		if len(tag.Find(".search_list_tidbit").Text()) > 0 {
 			// If class .search_list_tidbit position is = to 1 and is not empty it finds Main
 			if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
-				gamesTime = append(gamesTime, GamesTime{"--"})
+				gamesTime = append(gamesTime, GamesTime{"Main Story --"})
 
 			} else {
-				gamesTime = append(gamesTime, GamesTime{tag.Find(".search_list_tidbit").Eq(1).Text()})
+				gamesTime = append(gamesTime, GamesTime{"Main Story " + tag.Find(".search_list_tidbit").Eq(1).Text()})
 			}
 
 			if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
-				gamesExtra = append(gamesExtra, GamesExtra{"--"})
+				gamesExtra = append(gamesExtra, GamesExtra{"Main + Extra --"})
 
 			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{tag.Find(".search_list_tidbit").Eq(3).Text()})
+				gamesExtra = append(gamesExtra, GamesExtra{"Main + Extra " + tag.Find(".search_list_tidbit").Eq(3).Text()})
 			}
 
 			if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Completionist --"})
 			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{tag.Find(".search_list_tidbit").Eq(5).Text()})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Completionist " + tag.Find(".search_list_tidbit").Eq(5).Text()})
 			}
 		} else {
 			if tag.Find("div").Eq(1).Text() == "" {
-				gamesTime = append(gamesTime, GamesTime{"--"})
+				gamesTime = append(gamesTime, GamesTime{"Solo --"})
 
 			} else {
-				gamesTime = append(gamesTime, GamesTime{tag.Find("div").Eq(1).Text()})
+				gamesTime = append(gamesTime, GamesTime{"Solo " + tag.Find("div").Eq(1).Text()})
 			}
 
 			if tag.Find("div").Eq(3).Text() == "" {
-				gamesExtra = append(gamesExtra, GamesExtra{"--"})
+				gamesExtra = append(gamesExtra, GamesExtra{"Co-Op --"})
 
 			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{tag.Find("div").Eq(3).Text()})
+				gamesExtra = append(gamesExtra, GamesExtra{"Co-Op " + tag.Find("div").Eq(3).Text()})
 			}
 
 			if tag.Find("div").Eq(5).Text() == "" {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"--"})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Vs. --"})
 
 			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{tag.Find("div").Eq(5).Text()})
+				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Vs. " + tag.Find("div").Eq(5).Text()})
 			}
 		}
 
