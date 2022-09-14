@@ -63,11 +63,14 @@ func Search(game string) []Games {
 
 func howLongToBeat(game string) string {
 	//Split string with black spaces
-	var words []string = strings.Fields(game)
+	words := strings.Fields(game)
 
-	var jsonData = []byte(`{
+	//This part is so it can sprintf with commas
+	wordsMarshal, _ := json.Marshal(words)
+
+	var jsonData = []byte(fmt.Sprintf(`{
 		"searchType": "games",
-		"searchTerms": ["` + strings.Trim(fmt.Sprint(words), "[]") + `"],
+		"searchTerms": %v,
 		"searchPage": 1,
 		"size": 20,
 		"searchOptions": {
@@ -94,7 +97,7 @@ func howLongToBeat(game string) string {
 		  "sort": 0,
 		  "randomizer": 0
 		}
-	  }`)
+	  }`, string(wordsMarshal)))
 
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
