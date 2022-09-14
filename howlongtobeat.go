@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Games struct {
@@ -61,11 +62,12 @@ func Search(game string) []Games {
 }
 
 func howLongToBeat(game string) string {
+	//Split string with black spaces
+	var words []string = strings.Fields(game)
+
 	var jsonData = []byte(`{
 		"searchType": "games",
-		"searchTerms": [
-		    "` + game + `"
-		],
+		"searchTerms": ["` + strings.Trim(fmt.Sprint(words), "[]") + `"],
 		"searchPage": 1,
 		"size": 20,
 		"searchOptions": {
