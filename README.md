@@ -43,15 +43,15 @@ fmt.Println(result)
    {
       "image":"https://howlongtobeat.com/games/68151_Elden_Ring.jpg",
       "title":"Elden Ring",
-      "main":"Main Story 52 Hours ",
-      "extra":"Main + Extra 98 Hours ",
-      "completionist":"Completionist 131 Hours "
+      "main":"52h 37m",
+      "extra":"98h 12m",
+      "completionist":"131h 17m"
    }{
       "image":"https://howlongtobeat.com/games/108888_Elden_Ring_GB.jpg",
       "title":"Elden Ring GB",
-      "main":"Main Story 21 Mins ",
-      "extra":"Main + Extra 29 Mins ",
-      "completionist":"Completionist --"
+      "main":"0h 21m",
+      "extra":"0h 29m",
+      "completionist":"0h 0m"
    }
 ]
 ```
