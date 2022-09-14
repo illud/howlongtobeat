@@ -1,35 +1,14 @@
 package howlongtobeat
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"net/url"
-	"strings"
-
-	"github.com/PuerkitoBio/goquery"
+	"strconv"
 )
 
-type GamesTitles struct {
-	Title string `json:"title"`
-}
-
-type Gamesimages struct {
-	Image string `json:"image"`
-}
-
-type GamesTime struct {
-	Main string `json:"main"`
-}
-
-type GamesExtra struct {
-	Extra string `json:"extra"`
-}
-
-type GamesCompletionist struct {
-	Completionist string `json:"completionist"`
-}
 type Games struct {
 	Image         string `json:"image"`
 	Title         string `json:"title"`
@@ -38,111 +17,82 @@ type Games struct {
 	Completionist string `json:"completionist"`
 }
 
+type HowlongtobeatResponse struct {
+	Data []HowlongtobeatResponseData `json:"data"`
+}
+
+type HowlongtobeatResponseData struct {
+	Game_image string `json:"game_image"`
+	Game_name  string `json:"game_name"`
+	Comp_main  int    `json:"comp_main"`
+	Comp_plus  int    `json:"comp_plus"`
+	Comp_100   int    `json:"comp_100"`
+}
+
+func secondsToTime(e int) string {
+	h := e / 3600
+	m := e % 3600 / 60
+
+	var hours string = strconv.Itoa(h)
+
+	var minutes string = strconv.Itoa(m)
+
+	return hours + "h " + minutes + "m"
+}
+
 //Filters hmtl to find games
 func Search(game string) []Games {
 	gamesFound := howLongToBeat(game) // gets html
 
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(gamesFound)))
+	var howlongtobeatResponse HowlongtobeatResponse
 
+	err := json.Unmarshal([]byte(gamesFound), &howlongtobeatResponse)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
-
-	var gamesTitles []GamesTitles
-	var gamesimages []Gamesimages
-	var gamesTime []GamesTime
-	var gamesExtra []GamesExtra
-	var gamesCompletionist []GamesCompletionist
 
 	var games []Games
 
-	// Finds game image
-	doc.Find(".back_darkish .search_list_image img").Each(func(_ int, tag *goquery.Selection) {
-
-		link, _ := tag.Attr("src")
-
-		gamesimages = append(gamesimages, Gamesimages{"https://howlongtobeat.com" + link})
-	})
-
-	// Finds game name
-	doc.Find(".search_list_details .shadow_text a").Each(func(_ int, tag *goquery.Selection) {
-
-		title, _ := tag.Attr("title")
-		gamesTitles = append(gamesTitles, GamesTitles{title})
-	})
-
-	// Finds class .search_list_details_block and loops divs
-	doc.Find(".search_list_details_block").Each(func(i int, tag *goquery.Selection) {
-
-		// if finds .search_list_tidbit class it finds non online games else are online
-		if len(tag.Find(".search_list_tidbit").Text()) > 0 {
-			// If class .search_list_tidbit position is = to 1 and is not empty it finds Main
-			if tag.Find(".search_list_tidbit").Eq(1).Text() == "" {
-				gamesTime = append(gamesTime, GamesTime{"Main Story --"})
-
-			} else {
-				gamesTime = append(gamesTime, GamesTime{"Main Story " + tag.Find(".search_list_tidbit").Eq(1).Text()})
-			}
-
-			if tag.Find(".search_list_tidbit").Eq(3).Text() == "" {
-				gamesExtra = append(gamesExtra, GamesExtra{"Main + Extra --"})
-
-			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{"Main + Extra " + tag.Find(".search_list_tidbit").Eq(3).Text()})
-			}
-
-			if tag.Find(".search_list_tidbit").Eq(5).Text() == "" {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Completionist --"})
-			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Completionist " + tag.Find(".search_list_tidbit").Eq(5).Text()})
-			}
-		} else {
-			if tag.Find("div").Eq(1).Text() == "" {
-				gamesTime = append(gamesTime, GamesTime{"Solo --"})
-
-			} else {
-				gamesTime = append(gamesTime, GamesTime{"Solo " + tag.Find("div").Eq(1).Text()})
-			}
-
-			if tag.Find("div").Eq(3).Text() == "" {
-				gamesExtra = append(gamesExtra, GamesExtra{"Co-Op --"})
-
-			} else {
-				gamesExtra = append(gamesExtra, GamesExtra{"Co-Op " + tag.Find("div").Eq(3).Text()})
-			}
-
-			if tag.Find("div").Eq(5).Text() == "" {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Vs. --"})
-
-			} else {
-				gamesCompletionist = append(gamesCompletionist, GamesCompletionist{"Vs. " + tag.Find("div").Eq(5).Text()})
-			}
-		}
-
-	})
-
-	for i := range gamesTitles {
-		games = append(games, Games{gamesimages[i].Image, gamesTitles[i].Title, gamesTime[i].Main, gamesExtra[i].Extra, gamesCompletionist[i].Completionist})
+	for i := range howlongtobeatResponse.Data {
+		games = append(games, Games{"https://howlongtobeat.com/games/" + howlongtobeatResponse.Data[i].Game_image, howlongtobeatResponse.Data[i].Game_name, secondsToTime(howlongtobeatResponse.Data[i].Comp_main), secondsToTime(howlongtobeatResponse.Data[i].Comp_plus), secondsToTime(howlongtobeatResponse.Data[i].Comp_100)})
 	}
 
 	return games
 }
 
 func howLongToBeat(game string) string {
-	form := url.Values{}
-	form.Add("queryString", game)
-	form.Add("t", "games")
-	form.Add("sorthead", "popular")
-	form.Add("sortd", "Normal Order")
-	form.Add("plat", "")
-	form.Add("length_type", "main")
-	form.Add("length_min", "")
-	form.Add("length_max", "")
-	form.Add("detail", "0")
-	form.Add("v", "")
-	form.Add("f", "")
-	form.Add("g", "")
-	form.Add("randomize", "0")
+	var jsonData = []byte(`{
+		"searchType": "games",
+		"searchTerms": [
+		    "` + game + `"
+		],
+		"searchPage": 1,
+		"size": 20,
+		"searchOptions": {
+		  "games": {
+			"userId": 0,
+			"platform": "",
+			"sortCategory": "popular",
+			"rangeCategory": "main",
+			"rangeTime": {
+			  "min": 0,
+			  "max": 0
+			},
+			"gameplay": {
+			  "perspective": "",
+			  "flow": "",
+			  "genre": ""
+			},
+			"modifier": ""
+		  },
+		  "users": {
+			"sortCategory": "postcount"
+		  },
+		  "filter": "",
+		  "sort": 0,
+		  "randomizer": 0
+		}
+	  }`)
 
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -150,13 +100,13 @@ func howLongToBeat(game string) string {
 		},
 	}
 
-	req, err := http.NewRequest("POST", "https://howlongtobeat.com/search_results?page=1", strings.NewReader(form.Encode()))
+	req, err := http.NewRequest("POST", "https://www.howlongtobeat.com/api/search", bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		//handle postform error
 		fmt.Println(err)
 	}
-	req.Header.Add("Content-type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Type", "application/json; charset=UTF-8")
 	req.Header.Add("If-None-Match", `W/"wyzzy"`)
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36")
 	req.Header.Add("Accept", "*/*")
