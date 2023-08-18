@@ -12,11 +12,11 @@ It is an awesome website and a great service, also heavily living from community
 ### Install the dependency
 
 ```go
-go get github.com/saturnavt/howlongtobeat
+go get github.com/illud/howlongtobeat
 ```
 or
 ```go
-go get github.com/saturnavt/howlongtobeat@latest
+go get github.com/illud/howlongtobeat@latest
 ```
 
 ### Use in code
@@ -25,7 +25,7 @@ go get github.com/saturnavt/howlongtobeat@latest
 
 
 ```go
-import "github.com/saturnavt/howlongtobeat"
+import "github.com/illud/howlongtobeat"
 ```
 
 

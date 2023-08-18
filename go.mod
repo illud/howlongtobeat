@@ -1,4 +1,4 @@
-module github.com/saturnavt/howlongtobeat
+module github.com/illud/howlongtobeat
 
 go 1.17
 
